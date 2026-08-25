@@ -1,0 +1,81 @@
+﻿@{
+	ViewData["Title"] = "Товары";
+
+	string[] productNames =
+	{  
+		"Книга",
+		"Рюкзак",
+		"Чашка",
+		"Зонт",
+		"Очки",
+		"Помада",
+		"Кошелёк",
+		"Часы",
+		"Плед",
+		"Крем"
+	};
+
+	decimal[] productsPrices =
+	{
+		450,
+		1200,
+		350,
+		800,
+		1500,
+		1100,
+		950,
+		3500,
+		380,
+		250
+	};
+}
+
+<h1>Товары</h1>
+<table class="table">
+	<thead>
+		<tr>
+			<th>№</th>
+			<th>Название</th>
+			<th>Цена</th>
+		</tr>
+	</thead>
+	
+
+	<tbody>
+		@for(int i = 0; i < productNames.Length; i++)
+		{  // для зебры
+			string rowClass = i % 2 == 0 ? "even-row" : "odd-row";
+
+			<tr class="@rowClass">
+				<td>@(i + 1)</td>
+				<td>@productNames[i]</td>
+				<td>@productsPrices[i]</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<style>
+	tr.even-row td {
+		background-color: #f2f2f2;
+	}
+
+	tr.odd-row td {
+		background-color: grey;
+		color: white;
+	}
+
+	table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+
+	th, td {
+		border: 1px solid #ccc;
+	}
+
+	th {
+		background-color: #333;
+		color: white;
+	}
+</style>

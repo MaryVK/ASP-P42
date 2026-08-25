@@ -1,10 +1,21 @@
+using ASP_P42.Data;
 using ASP_P42.Services.Hash;
+using ASP_P42.Services.Kdf;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
 builder.Services.AddHash();
+builder.Services.AddKdf();
+// БД додається як сервіс, але специфічним методом-розширенням
+builder.Services.AddDbContext<DataContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("LocalDB")
+    )
+);
 
 var app = builder.Build();
 
@@ -30,3 +41,34 @@ app.MapControllerRoute(
 
 
 app.Run();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
