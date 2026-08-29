@@ -1,13 +1,23 @@
 ﻿@* Інжекція до представлення *@
 @inject ASP_P42.Services.Hash.IHashService hashService
-
+@inject ASP_P42.Services.Time.ITimeService timeService
 @{
     ViewData["Title"] = "IoC";
 }
 
+
+
 <div class="text-center">
     <h1 class="display-4">Інверсія управління. Служби.</h1>
 </div>
+
+<p>
+    <b>Timestamp:</b> @timeService.GetTimestamp()
+</p>
+<p>
+    <b>Hash-код службы:</b> @timeService.GetHashCode()
+</p>
+
 
 @ViewData["digest"]
 @hashService.GetHashCode()

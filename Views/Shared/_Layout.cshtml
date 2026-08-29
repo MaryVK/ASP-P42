@@ -1,4 +1,15 @@
-﻿﻿
+﻿@using ASP_P42.Data.Entities
+@{
+    // проверяем авторизацию - изымаем из контекста данные по ключчу 
+    // "userAccessId"
+    UserAccess? userAccess = null;
+    String authKey = "userAccessId";
+    if(Context.Items.Keys.Contains(authKey))
+    {
+        userAccess = (UserAccess)Context.Items[authKey]!;
+    }
+
+}    ﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,11 +69,20 @@
 
                     </ul>
 
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-outline-secondary"
-                            data-bs-toggle="modal" data-bs-target="#authModal">
-                        Вхід
-                    </button>
+                    @if(userAccess == null)
+                        {
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-outline-secondary"
+                                data-bs-toggle="modal" data-bs-target="#authModal">
+                            Вхoд
+                        </button>
+                        }
+                        else
+                        {
+                            <a class="btn btn-outline-danger"
+                                href="?logout">Выход</a>
+                        }
+
 
                 </div>
             </div>
@@ -247,3 +267,6 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html> *@
+	@functions {
+	private object userAccess;
+}

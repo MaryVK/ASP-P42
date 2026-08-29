@@ -62,27 +62,29 @@ namespace ASP_P42.Data
                     }
                     ]);
             modelBuilder.Entity<Entities.UserData>()
-                .HasData([
-                    new() {
-                        Id = Guid.Parse(""),
-                        FullName = "Администратор системы",
-                        BirthDate = DateTime.UnixEpoch,
-                        Email = "CHANGE@ME",
-                        Phone = "CHANGE_ME",
-                        RegisteredAt = DateTime.UnixEpoch,
-                    }
-                ]);
-
+     .HasData([
+         new() {
+            Id = Guid.Parse("190052CA-F844-498A-A05F-1D4BA2ADC0E8"),
+            FullName = "Адміністратор Системи",
+            BirthDate = DateTime.UnixEpoch,
+            Email = "CHANGE@ME",
+            Phone = "CHANGE_ME",
+            RegisteredAt = DateTime.UnixEpoch,
+        }
+     ]);
             modelBuilder.Entity<Entities.UserAccess>()
                 .HasData([
-                    new() {   
-                        Id = Guid.Parse("96DCBBBA-9AEE-44A2-8835-72DFE4E1A710"),
-                        // ID - як в Адміністратора   
-                       // ID - як в ролі Адміністратора    
-                        Login = "Admin",
-                        Salt = "96DCBBBA-9AEE-44A2-8835-72DFE4E1A710",
-                        Dk = "",
-                     }]);
+                    new() {
+            Id = Guid.Parse("96DCBBBA-9AEE-44A2-8835-72DFE4E1A710"),
+            // ID - як в Адміністратора
+            UserId= Guid.Parse("190052CA-F844-498A-A05F-1D4BA2ADC0E8"),
+            // ID - як в ролі Адміністратора
+            RoleId = Guid.Parse("21F7C25A-629B-4BEB-9339-0C37AC9A8444"),
+            Login = "Admin",
+            Salt = "96DCBBBA-9AEE-44A2-8835-72DFE4E1A710",
+            Dk = "FCB57CECE720632FDBB68958CF953E46",  // password - 96DCBBBA
+        }
+                ]);
         }
     }
 }

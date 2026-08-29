@@ -46,11 +46,16 @@ document.addEventListener('submit', e => {
 
         fetch("/User/BasicAuth", {
             headers: {
-                "Authorization": "Basicc !" + credentials,
+                "Authorization": "Basic " + credentials,
             }
         }).then(r => {
             if (r.ok) {
-                return r.json();
+                // return r.json();
+                // при работе с сессиями при положительном ответе
+                // следует перезагркзить страничку.
+                // Это должно активировать работу кукки
+
+                window.location.reload();
             }
             else {
                 return r.text();
