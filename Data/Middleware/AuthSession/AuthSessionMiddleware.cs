@@ -1,6 +1,7 @@
 ﻿using ASP_P42.Data;
 using ASP_P42.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace ASP_P42.Data.Middleware.AuthSession
 {
@@ -17,7 +18,7 @@ namespace ASP_P42.Data.Middleware.AuthSession
             DataContext dataContext   // 
         )
         {
-            String authKey = "usesrAccessId";
+            String authKey = "userAccessId";
             // сначала спрашиваем, не запрошен ли выход (из авториз. режима)
             // про это свидетельствует наличие query-параметра "logout"
             //if (context.Request.Query.ContainsKey("logout"))
@@ -50,7 +51,25 @@ namespace ASP_P42.Data.Middleware.AuthSession
                     .FirstOrDefault(ua => ua.Id.ToString() == userAccessId);
                 if (userAccess != null)
                 {
-                    context.Items.Add(authKey, userAccess);
+                    // найдено подтверждение допуска, передаём к контексту 
+                    // context.Items.Add(authKey, userAccess);
+                    // Данный подход не рекомендованный, т.к 
+                    // привязывается к типам данных сущностей.
+                    // Реомендовано использовать унифицированный
+                    // интерфейс с помощью Claims - набора атрибутов
+                    // типового предназначения
+                    context.User = new ClaimsPrincipal(
+                        new ClaimsIdentity(
+                            [
+                            // 1 Claim - 1 характеристика пользователя
+                                new Claim(ClaimTypes.Name, userAccess.UserData.FullName),
+                                new (ClaimTypes.Email, userAccess.UserData.Email),
+                                new (ClaimTypes.NameIdentifier, userAccess.Login),
+                                new (ClaimTypes.Sid, userAccess.Id.ToString()),
+                            ],
+                            nameof(AuthSessionMiddleware)
+                        )
+                    );
                 }
             }
 

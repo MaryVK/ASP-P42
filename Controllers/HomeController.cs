@@ -5,6 +5,8 @@ using ASP_P42.Services.Hash;
 using ASP_P42.Services.Kdf;
 using Microsoft.AspNetCore.Mvc;
 
+
+// принимаем форму
 namespace ASP_P42.Controllers
 {
     // primary constructor - прямо при оголошенні класу

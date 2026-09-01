@@ -4,8 +4,14 @@
     ViewData["Title"] = "Form Models";
 }
 
+@* ModelsForm - результат обработки формы.
+   Эта страница показывает, что пользователь отправил.
+   Страница, которая получает и отображает результат отправки (заполненные поля в Models.cshtml)
+*@
+
 <div class="text-center page-title">
-    <h1 class="display-4">Прийом даних форм</h1>
+    <h1 class="display-4">Приём данных форм</h1>
 </div>
+
 
 @Html.DisplayFor(m => Model)

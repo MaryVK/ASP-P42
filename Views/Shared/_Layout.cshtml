@@ -1,16 +1,27 @@
-﻿@using ASP_P42.Data.Entities
+﻿@* @using ASP_P42.Data.Entities *@
+@using System.Security.Claims
 @{
-    // проверяем авторизацию - изымаем из контекста данные по ключчу 
+    // проверяем авторизацию - изъятие из контекста данные по ключчу
     // "userAccessId"
-    UserAccess? userAccess = null;
-    String authKey = "userAccessId";
-    if(Context.Items.Keys.Contains(authKey))
-    {
-        userAccess = (UserAccess)Context.Items[authKey]!;
-    }
+    // UserAccess? userAccess = null;
+    // String authKey = "userAccessId";
+    // if(Context.Items.Keys.Contains(authKey))
+    // {
+    //     userAccess = (UserAccess)Context.Items[authKey]!;
+    // }
 
-}    ﻿
-<!DOCTYPE html>
+
+    // новая схема работы - изъятие 
+    bool isAuthenticated = Context.User.Identity?.IsAuthenticated ?? false;
+    String? userName = isAuthenticated   // если пользователь авторизован
+    ? Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value
+    : null;
+
+    String? userEmail = isAuthenticated
+   ? Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value
+   : null;
+}
+
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -69,7 +80,7 @@
 
                     </ul>
 
-                    @if(userAccess == null)
+                    @if(!isAuthenticated)
                         {
                         <!-- Button trigger modal -->
                         <button type="button" class="btn btn-outline-secondary"
@@ -79,7 +90,9 @@
                         }
                         else
                         {
+                            
                             <a class="btn btn-outline-danger"
+                               title="@userName"
                                 href="?logout">Выход</a>
                         }
 

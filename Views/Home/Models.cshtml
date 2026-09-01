@@ -1,6 +1,10 @@
 ﻿@*  Приймаємо модель представлення (від контролера),
     тут зазначаємо лише тип, самі дані доступні 
     через Razor-властивість Model
+
+    какие поля показываем.
+    Это страница, которая рассказывает про модели.
+    Здесь пользователь ЗАПОЛНЯЕТ форму
 *@
 @model ASP_P42.Models.Home.Models.HomeModelsViewModel
 
@@ -39,5 +43,42 @@
     <br/>
     Password: <input name="user-password" type="password" />
     <br/>
+    <label>
+        <input type="checkbox" name="agree" value="true" />
+        Я согласен(-а)
+    </label>
+    <br />
+    <p>Пол:</p>
+
+    <label>
+        <input type="radio" name="gender" value="male" />
+        Мужчина
+    </label>
+
+    <label>
+        <input type="radio" name="gender" value="female" />
+        Женщина
+    </label>
+
+    <br />
+    <label>
+        Дата рождения:
+        <input type="date" name="birth-date" />
+    </label>
+
+    <br />
+    <label>
+        Любимый цвет:
+        <input type="color" name="color" />
+    </label>
+
+    <br />
+    <label>
+        Возраст:
+        <input type="number" name="age" />
+    </label>
+
+    <br />
+
     <button>GO</button>
 </form>
