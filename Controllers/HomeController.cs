@@ -57,6 +57,10 @@ namespace ASP_P42.Controllers
             return View(formModel);
         }
 
+        public IActionResult EntityFramework()
+        {
+            return View();
+        }
         public IActionResult RazorPractice()
         {
             return View();

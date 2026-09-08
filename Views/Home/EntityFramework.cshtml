@@ -1,0 +1,229 @@
+﻿@{
+	ViewData["Title"] = "Entity Framework";
+}
+
+<div class="text-center">
+	<h1>
+		Подключение БД с помощью Entity Framework
+	</h1>
+</div>
+
+<div class="container">
+	<h2>1.Что такое  EF ?</h2>
+	<p>
+		<b>Entity Framework Core</b> - инструмент для .NET, 
+		 который позволяет работать с БД, вместо того чтобы 
+		 писать SQL вручную.
+	</p>
+	<p> 
+		С помощью EF можно создавать таблицы, добавлять, 
+		изменять, удалять и получать данные из БД
+	</p>
+
+	<h2>2. Основные этапы подключения БД</h2>
+	<ol>
+		<li>Установить необходимые пакеты EF Core</li>
+		<li>Создать классы-сущности (Entity)</li>
+		<li>Создать класс <b>DbContext</b></li>
+		<li>Добавить рядок подключения к БД</li>
+		<li>Зарегистрировать DbContext в программе </li>
+		<li>Создать миграцию</li>
+		<li>Применить миграцию к БД</li>
+		<li>Работать с данными через DbContext</li>
+	</ol>
+
+	 <h2>3. Entity - сущность</h2>
+	 <p>
+		<b>Entity(сущность)</b> - это класс С#, который 
+		описывает объект, который будет сохраняться в БД
+	 </p>
+	 <p>Например, в проекте может быть сущность Product:</p>
+	 <pre><code>
+		 public class Product 
+		 {
+			 public int Id { get; set; }
+			 public string Name { get; set; } = null!;
+			 public decimal Price { get; set; }
+		 }
+	 </pre></code>
+
+	 <p>
+		  Этот класс может отвечать таблице <b>Product</b> в БД.
+	 </p>
+
+	  <h2>4. DbContext </h2>
+	  <p> 
+		<b>DbContext</b> - главный класс EF Core, через который
+		программа взаимодействует с БД.
+	  </p>
+	  <p>Например:</p>
+	  <pre><code>public class DataContext : DbContext
+		  {
+			  public DataContext(DbContextOptions&lt;DataContext&gt; options) : base(options)
+			  {
+			  }
+
+			  public DbSet&lt;Product&gt; Products { get; set; }
+		  }
+	</pre></code>
+
+		  <p>
+			  <b>DbSet&lt;Product&gt;</b> представляет таблицу Product
+			  и позволяет работать с её записями.
+		  </p>
+
+	  <h2> 5. Connection String</h2>
+	  <p>
+		  <b>Connection String</b> - это рядок подключения,
+		  который содержит информацию, необходимую программе для подключения
+		  к БД.
+	  </p>
+	  <p>Например: </p>
+
+	  <pre><code>
+		  {"ConnectionStrings": {
+		"DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=ShopDb;Trusted_Connection=True;"
+		  }
+	  }</pre></code>
+
+	  <h2>6. Регистрация DbContext</h2>
+	  <p>
+		  В файл <b>Program.cs</b> необходимо зарегистрировать
+		  контекст БД в системе Dependency Injection:
+	  </p>
+	  <pre><code>
+		  builder.Services.AddDbContext&lt;DateContext&gt;(options =&gt;
+		  options.UseSqlServer(
+			  builder.Configuration.GetConnectionString("DefaultConnection")
+		  )
+	  );</pre></code>
+
+	  <h2>7. Migration</h2>
+	  <p>
+		<b>Migration</b> - механизм EF, который позволяет создавать и 
+		изменять структуру БД, соответствуя классам-сущностям в программе
+	  </p>
+	  <p>
+		  Например, после создания класса Product можно создать миграцию: 
+	  </p>
+	<pre><code>Add-Midration InitialCreate</code></pre>
+	  <p>После этого изменения применятся к БД: </p>
+	<pre><code>Update-Database</code></pre>
+
+	  <h2>8. Работа с данными</h2>
+	  <p>
+		  После подключения БД можно получить данные через DbContext.
+	  </p>
+	<pre><code>var products = context.Products.ToList();</code></pre>
+	  <p> 
+		  Добавить новую запись:
+	  </p>
+	  <pre><code>
+		  var product = new Product
+		  {
+			  Name = "Laptop",
+			  Price = 30000
+		  };
+
+		  context.Products.Add(product);
+		  context.SaveChanges();
+	  </code></pre>
+
+	  <h2>9. Терминология БД:</h2>
+	  <table class="table table-bordered">
+		  <tr>
+			  <th>Термин</th>
+			  <th>Объяснение</th>
+		  </tr>
+
+		  <tr>
+			  <td><b>Database</b></td>
+			  <td>
+				  Организованное хранилище данных
+			  </td>
+		  </tr>
+
+		  <tr>
+			<td><b>Table</b></td>
+			<td>
+				Структура, в которой сохраняются однотипные данные
+			</td>
+		  </tr>
+
+		  <tr>
+			  <td><b>Row</b></td>
+			  <td>
+				  одна конкретная запись в таблице
+				  </td>
+		  </tr>
+		 
+
+		  <tr>
+			<td><b>Column</b></td>
+			  <td>
+				  Отдельное поле таблицы,которое 
+				  описывает определённую особенность
+				  данных.
+			  </td>
+		  </tr>
+
+		  <tr>
+			  <td><b>Primary Key</b></td>
+			  <td>
+				  Уникальгый идентификатор записи в таблице
+			  </td>
+		  </tr>
+
+		  <tr>
+			<td><b>Foreign Key</b></td>
+			<td>
+				Поле, которое устанавливает связь между таблицами
+			</td>
+		  </tr>
+
+		  <tr>
+			  <td><b>Relationship</b></td>
+			  <td>
+				  Связь между таблицами БД
+			  </td>
+		  </tr>
+
+		  <tr>
+			  <td><b>SQL</b></td>
+			  <td>
+				  Язык для работы с реляционныеми БД
+			  </td>
+		  </tr>
+
+		  <tr>
+			  <td><b>ORM</b></td>
+			  <td>
+				  Технология, которая позволяет работать с БД
+				  через объекты языка программирования
+			  </td>
+		  </tr>
+
+		  <tr>
+			  <td><b>Entity</b></td>
+			  <td>
+				 Класс C#, котрый представляет объект базы данных
+			  </td>
+		  </tr>
+
+		<tr>
+			<td><b>DbSet</b></td>
+			<td>
+				Представление таблицы БД в DbContext
+			</td>
+		</tr>
+		  
+		<tr>
+			<td><b>Migration</b></td>
+			<td>
+				Описание изменений структуры БД , созданный EF Core
+			</td>
+		</tr>
+	  </table>
+
+	  
+</div>

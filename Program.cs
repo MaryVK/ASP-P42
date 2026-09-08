@@ -32,6 +32,24 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+// Настройка CORS
+// CORS (Cross-Origin Resource Sharing) - «обмен ресурсами между разными источниками»
+// это механизм, который управляет тем, может ли один сайт
+// обращаться к серверу, который находится на другом адресе(origin)
+
+// POSTMAN игнорирует CORS, потому что CORS - это в первую очередь ограничение 
+//                          ограничение браузера, а не запрет самого
+//                          HTTP-запроса
+// POSTMAN - программа для отправки HTTP-запросов к бэкенд и проверка ответа
+builder.Services.AddCors(options => 
+    options.AddDefaultPolicy(policy => 
+        policy
+        .AllowAnyOrigin()    // открытый API - для всех пользователей
+        .AllowAnyHeader()    // разрешаем все заголовки 
+        .AllowAnyMethod()    // все методы запроса
+    )
+);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -44,6 +62,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseCors();
 
 app.UseAuthorization();
 app.MapStaticAssets();

@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
+using ASP_P42.Models.User;
+using System.Text.RegularExpressions;
 
 
 namespace ASP_P42.Controllers
@@ -18,6 +21,109 @@ namespace ASP_P42.Controllers
     {
         private readonly DataContext _dataContext = dataContext;
         private readonly IKdfService _kdfService = kdfService;
+
+
+        // Регистрация по данным, которые поступают из фронтенда (JSON)
+        public IActionResult SignUp([FromBody]UserSignUpFormModel formModel)
+        {   
+            // Валидация модели - проверка данных на допустимость
+            // Добавляем нового юзера
+
+            if(formModel == null)
+            {
+                return BadRequest("Data structure non-bindable to model");
+            }
+            if (! formModel.IsAgree)
+            {
+                return BadRequest("You should confirm site policy (agreement)");
+            }
+            String requiredMessage = " could not be empty";
+            if (String.IsNullOrEmpty(formModel.Login))
+            {
+                return BadRequest(nameof(formModel.Login) + requiredMessage);
+            }
+
+            if (String.IsNullOrEmpty(formModel.FullName))
+            {
+                return BadRequest(nameof(formModel.FullName) + requiredMessage);
+            }
+
+            if (String.IsNullOrEmpty(formModel.Email))
+            {
+                return BadRequest(nameof(formModel.Email) + requiredMessage);
+            }
+
+            if (String.IsNullOrEmpty(formModel.Phone))
+            {
+                return BadRequest(nameof(formModel.Phone) + requiredMessage);
+            }
+
+            if(formModel.Password != formModel.Repeat)
+            {
+                return BadRequest("Password and Repeat mismatch");
+            }
+
+            // проверка следующей сложности - соответствие форматаm, а также предыдущая обработка
+            formModel.FullName = formModel.FullName.Trim();
+            if(formModel.FullName.Length < 2)
+            {
+                return BadRequest(nameof(formModel.FullName) + " too short (2 symbols at least)");
+            }
+
+            formModel.Login = formModel.Login.Trim();
+            if (formModel.Login.Length < 2)
+            {
+                return BadRequest(nameof(formModel.Login) + " too short (2 symbols at least)");
+            }
+
+  
+            if (formModel.Login.Contains (':'))
+            {
+                return BadRequest(nameof(formModel.Login) + " could not contain colon (':')");
+            }
+
+
+            formModel.Email = formModel.Email.Trim();
+            if (!Regex.IsMatch(
+                formModel.Email,
+                @"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"
+            ))
+            {
+                return BadRequest(nameof(formModel.Email) + " has invalid format");
+            }
+
+            // самая сложная проверка - с привлечением БД
+
+            if(_dataContext.UserAccess.Any(ua => ua.Login == formModel.Login))
+            {
+                BadRequest(nameof(formModel.Login));
+            }
+
+            Guid userId = Guid.NewGuid();
+            _dataContext.UsersData.Add(new()
+            {
+                Id = userId,
+                FullName = formModel.FullName,
+                Email = formModel.Email,
+                Phone = formModel.Phone,
+                RegisteredAt = DateTime.Now,
+                BirthDate = default,
+            });
+            String salt = Guid.NewGuid().ToString();
+            _dataContext.UserAccess.Add(new()
+            {
+                Id = Guid.NewGuid(),
+                UserId = userId,
+                RoleId = _dataContext.UsersRoles.First(r => r.Name == "User").Id,
+                Login = formModel.Login,
+                Salt = salt,
+                Dk = _kdfService.Dk(formModel.Password, salt),
+            });
+            _dataContext.SaveChanges();                
+            return Json(formModel);
+        }
+
+       
         // Аутенфикация - проверка логина и пароля
         public IActionResult BasicAuth()
         {
@@ -87,6 +193,7 @@ namespace ASP_P42.Controllers
             ////    вычисления ДК с переданным паролем и солью
             ////    Результат вычисления должен совпадать с сохранением 
             ////    ДК в БД
+            ///
             ////    
 
             //if (_dataContext
@@ -231,6 +338,9 @@ namespace ASP_P42.Controllers
 
             if (_dataContext
                 .UserAccess
+                .Include( ua => ua.UserData)
+                .Include(ua => ua.UserRole)
+                .AsNoTracking()
                 .FirstOrDefault(ua => ua.Login == login)
                 is UserAccess userAccess)
             {
