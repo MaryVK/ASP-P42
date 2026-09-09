@@ -2,6 +2,7 @@ using ASP_P42.Data;
 using ASP_P42.Data.Middleware.AuthSession;
 using ASP_P42.Services.Hash;
 using ASP_P42.Services.Kdf;
+using ASP_P42.Services.Storage;
 using ASP_P42.Services.Time;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHash();
 builder.Services.AddKdf();
 builder.Services.AddTimeService();
+builder.Services.AddStorage();
 // БД додається як сервіс, але специфічним методом-розширенням
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(

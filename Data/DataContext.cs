@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ASP_P42.Models.Home.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ASP_P42.Data
 {
@@ -11,6 +12,8 @@ namespace ASP_P42.Data
         public DbSet<Entities.ProductGroup> ProductGroups { get; set; }
         public DbSet<Entities.Product> Products { get; set; }
         public DbSet<Entities.ProductVersion> ProductVersions { get; set; }
+
+        public DbSet<Entities.AuthJournal> AuthJournals { get; set; }
 
         // Конструирования контекста настраиваются из Program.cs
         // соответственно, на время проекторивания делегируется 

@@ -45,7 +45,7 @@
 			 public string Name { get; set; } = null!;
 			 public decimal Price { get; set; }
 		 }
-	 </pre></code>
+	 </code></pre>
 
 	 <p>
 		  Этот класс может отвечать таблице <b>Product</b> в БД.
@@ -65,7 +65,7 @@
 
 			  public DbSet&lt;Product&gt; Products { get; set; }
 		  }
-	</pre></code>
+	</code></pre>
 
 		  <p>
 			  <b>DbSet&lt;Product&gt;</b> представляет таблицу Product
@@ -84,7 +84,7 @@
 		  {"ConnectionStrings": {
 		"DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=ShopDb;Trusted_Connection=True;"
 		  }
-	  }</pre></code>
+	  }</code></pre>
 
 	  <h2>6. Регистрация DbContext</h2>
 	  <p>
@@ -96,7 +96,7 @@
 		  options.UseSqlServer(
 			  builder.Configuration.GetConnectionString("DefaultConnection")
 		  )
-	  );</pre></code>
+	  );</code></pre>
 
 	  <h2>7. Migration</h2>
 	  <p>

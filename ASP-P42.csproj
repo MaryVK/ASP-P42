@@ -16,4 +16,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ASP_P42\Data\Entities\" />
+  </ItemGroup>
+
 </Project>

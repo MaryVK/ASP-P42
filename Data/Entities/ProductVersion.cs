@@ -9,7 +9,7 @@ namespace ASP_P42.Data.Entities
 
         public String? Version { get; set; } = null!;
 
-        [Column(TypeName = "DEECIMAL(18, 2)")]
+        [Column(TypeName = "DECIMAL(18, 2)")]
         public decimal Price { get; set; }
         public int Stock { get; set; } = 1;
         public String? Slug { get; set; }

@@ -4,8 +4,6 @@ using ASP_P42.Services.Kdf;
 using System.Text;
 using ASP_P42.Data.Entities;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
-using System.Text;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using ASP_P42.Models.User;
@@ -21,6 +19,7 @@ namespace ASP_P42.Controllers
     {
         private readonly DataContext _dataContext = dataContext;
         private readonly IKdfService _kdfService = kdfService;
+
 
 
         // Регистрация по данным, которые поступают из фронтенда (JSON)
@@ -347,8 +346,29 @@ namespace ASP_P42.Controllers
                 String dk = _kdfService.Dk(password, userAccess.Salt);
                 if (dk == userAccess.Dk)
                 {
+                    _dataContext.AuthJournals.Add(new AuthJournal
+                    {
+                        DateTime = DateTime.Now,
+                        Login = login,
+                        Dk = dk,
+                        IsOk = true
+
+                    });
+
+                    _dataContext.SaveChanges();
+
                     return userAccess;
                 }
+
+                _dataContext.AuthJournals.Add(new AuthJournal
+                {
+                    DateTime = DateTime.Now,
+                    Login = login,
+                    Dk = dk,
+                    IsOk = false
+                });
+
+                _dataContext.SaveChanges();
             }
             return null;
         }
