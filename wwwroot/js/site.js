@@ -20,11 +20,18 @@ document.addEventListener('submit', e => {
         const login = formData.get('auth-login');
         const password = formData.get('auth-password');
         let errorMessage = "";
+
+        
         if (login.trim().length === 0) {
             errorMessage += "Логин не может быть пустым";
         }
+
         if (password.trim().length === 0) {
             errorMessage += "Пароль не может быть пустым";
+        }
+
+        if (login.includes(':')) {
+            errorMessage += "Логин не можен содержать символ ':'";
         }
         const err = document.getElementById("auth-modal-error");
         if (errorMessage.length > 0) {
@@ -58,7 +65,10 @@ document.addEventListener('submit', e => {
                 window.location.reload();
             }
             else {
-                return r.text();
+                r.text().then(message => {
+                    err.innerText = message;
+                    err.style.visibility = "visible";
+                });
             }
         }).then(console.log);
 
@@ -68,6 +78,20 @@ document.addEventListener('submit', e => {
         e.preventDefault();
         const formData = new FormData(form);
         fetch("/Admin/AddGroup", {
+            method: "POST",
+            body: formData
+        }).then(r => {
+            /* if (r.ok) */
+            {
+                r.text().then(alert);
+            }
+        });
+    }
+
+    else if (form.id == 'admin-add-product') {
+        e.preventDefault();
+        const formData = new FormData(form);
+        fetch("/Admin/AddProduct", {
             method: "POST",
             body: formData
         }).then(r => {

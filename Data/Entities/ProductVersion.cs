@@ -15,6 +15,7 @@ namespace ASP_P42.Data.Entities
         public String? Slug { get; set; }
         public String? ImageUrl { get; set; } = null!;
         public int IsHidden { get; set; } = 0;
+        public int OrderInPrice { get; set; } = 100000;
 
         public Product Product { get; set; } = null!;
     }
