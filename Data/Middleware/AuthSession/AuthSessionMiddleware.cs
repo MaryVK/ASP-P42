@@ -34,7 +34,7 @@ namespace ASP_P42.Data.Middleware.AuthSession
             //}
 
             // context, который передаётся параметром, это тот самый
-            // HttpContext? который доступный из контроллера 
+            // HttpContext? который доступен из контроллера 
             context.Items.Add("itemKey", "Item Value");
 
             // проверяем, есть ли в сессии элемент с ключом "userAccessId"

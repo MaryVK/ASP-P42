@@ -56,6 +56,16 @@ namespace ASP_P42.Controllers
         {
             return View(formModel);
         }
+        public IActionResult Index()
+        {
+            // ViewBag - способ передать данные из Controller во View 
+            // ViewBag - свойство, которое есть у Controller, которое наследуется HomeController-ом
+            // Я записала  context.Items.Add("itemKey", "Item Value") в AuthSessionMiddleware.cs , 
+            // поэтому HomeController может взять это значение из HttpContext.Items
+            ViewBag.ItemValue = HttpContext.Items["itemKey"];
+
+            return View();
+        }
 
         public IActionResult EntityFramework()
         {
@@ -66,11 +76,6 @@ namespace ASP_P42.Controllers
             return View();
         }
         public IActionResult Razor()
-        {
-            return View();
-        }
-
-        public IActionResult Index()
         {
             return View();
         }
@@ -92,9 +97,3 @@ namespace ASP_P42.Controllers
         }
     }
 }
-/* Д.З. Розширити форму на сторінці /Home/Models
- * додати поля з різними типами: "галочка", радіокнопки,
- * вибір дати, кольору, числа тощо
- * Адаптувати модель ASP для прийому відповідних даних.
- * Додати скріншоти.
- */
