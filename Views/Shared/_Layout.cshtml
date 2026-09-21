@@ -13,9 +13,17 @@
 
     // новая схема работы - изъятие 
     bool isAuthenticated = Context.User.Identity?.IsAuthenticated ?? false;
-    String? userName = isAuthenticated   // если пользователь авторизован
+
+    String? userName = isAuthenticated   // если имя пользователя авторизовано
     ? Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value
     : null;
+
+
+    // => ДЗ: изъятие логина 
+    String? userLogin = isAuthenticated
+    ? Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value
+    : null;
+
 
     String? userEmail = isAuthenticated
    ? Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value
@@ -98,6 +106,25 @@
                         else
                         {
                             <a asp-controller="Admin" class="btn btn-outline-warning">Admin</a>
+
+                            // если логин существует и он не пустой, то я беру первую букву в верхний регистр 
+                            @if (!string.IsNullOrEmpty(userLogin))
+                            {
+                                <div class="user-avatar">
+                                    <div class="avatar-circle">
+                                        @userLogin[0].ToString().ToUpper()
+                                    </div>
+
+                                <!-- для всплывающей подсказки с именем и почтой польз-ля + стилизация -->
+                                    <div class="avatar-tip">
+                                        <div>@userName</div>
+                                        <div>@userEmail</div>
+                                    </div>
+                                </div>
+
+                           
+                            }
+
                             <a class="btn btn-outline-danger"
                                title="@userName"
                                 href="?logout">Выход</a>

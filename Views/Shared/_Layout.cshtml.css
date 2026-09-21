@@ -46,3 +46,39 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
+
+/* стилизация аватарки с первой буквой логина и всплывающей подсказки */
+.user-avatar {
+    position: relative;
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: blue;
+    color: antiquewhite;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.avatar-tip {
+    display: none;
+    position: absolute;
+    top: 45px;
+    right: 0;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.user-avatar:hover .avatar-tip {
+    display: block;
+}

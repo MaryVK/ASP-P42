@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ASP_P42\Data\Entities\" />
+    <Folder Include="ASP_P42\" />
   </ItemGroup>
 
 </Project>

@@ -58,8 +58,8 @@ namespace ASP_P42.Data.Middleware.AuthSession
                     // Реомендовано использовать унифицированный
                     // интерфейс с помощью Claims - набора атрибутов
                     // типового предназначения
-                    context.User = new ClaimsPrincipal(
-                        new ClaimsIdentity(
+                    context.User = new ClaimsPrincipal(  // представитель текущего пользователя в приложении
+                        new ClaimsIdentity(  // набор информации об 1 авторизации
                             [
                             // 1 Claim - 1 характеристика пользователя
                                 new Claim(ClaimTypes.Name, userAccess.UserData.FullName),
