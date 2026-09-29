@@ -1,4 +1,6 @@
 ﻿using ASP_P42.Data;
+using ASP_P42.Data.Entities;
+using ASP_P42.Models.Rest;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,14 +10,57 @@ namespace ASP_P42.Controllers.Api
     [ApiController]
     public class GroupController(DataContext dataContext) : ControllerBase
     {
+        private readonly DataContext _dataContext = dataContext;
 
-        private readonly DataContext _dataContext;
         [HttpGet]  // Это запустится запросом GET /api/group
 
-        public IEnumerable<Data.Entities.ProductGroup> GetAllGroups()
+        
+       
+        public RestResponse GetAllGroups(int page = 1, int pageSize = 10)
         {
+
+            var query = _dataContext
+                .ProductGroups
+                .Where(g => g.IsHidden == 0 && g.ParentId == null)
+                .OrderBy(g => g.OrderInPrice);
+
+            int cnt = query.Count();
+
+            RestMetaPagination pagination = new()
+            {
+                Page = page,
+                PageSize = pageSize,
+                TotalItems = cnt,
+                TotalPages = (int)Math.Ceiling((float)cnt / pageSize),
+            };
+
+            ProductGroup[] groups = query.Skip(pageSize * (page - 1)).Take(pageSize).ToArray();
+
+            foreach(var group in groups)
+            {
+                if(group.ImageUrl.StartsWith('/'))
+                {
+                    group.ImageUrl = $"{Request.Scheme}://{Request.Host}{group.ImageUrl}";
+                }
+            }
             // возвращаем данные любого типа, они автоматически преобразуются на JSON
-            return _dataContext.ProductGroups.Where(g => g.IsHidden == 0); 
+            return new()
+            {
+                Meta = new()
+                {
+                    ApiName = "Product Groups",
+                    DataType = "json/array",
+                    CacheTime = 86_400_000,
+                    Manipulations = ["GET"],
+                    Links =
+                    {
+                        { "self", "/api/group" },
+                        { "sub", "/api/group/{slug}" },
+                    },
+                    Pagination = pagination,
+                },
+                Data = groups,
+            };
         }
 
         [HttpPost]  // это запустится запросом POST /api/group

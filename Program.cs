@@ -43,14 +43,35 @@ builder.Services.AddSession(options =>
 //                          ограничение браузера, а не запрет самого
 //                          HTTP-запроса
 // POSTMAN - программа для отправки HTTP-запросов к бэкенд и проверка ответа
-builder.Services.AddCors(options => 
-    options.AddDefaultPolicy(policy => 
+builder.Services.AddCors(options =>
+{
+    // ДЗ: 1) полный доступ 
+    options.AddPolicy("AllowAll", policy =>
+    {
         policy
-        .AllowAnyOrigin()    // открытый API - для всех пользователей
-        .AllowAnyHeader()    // разрешаем все заголовки 
-        .AllowAnyMethod()    // все методы запроса
-    )
-);
+             .AllowAnyOrigin()
+             .AllowAnyHeader()
+             .AllowAnyMethod();
+    });
+
+    // 2) только localhost:5173
+    options.AddPolicy("AllowReact", policy =>
+    {
+        policy
+           .WithOrigins("http://localhost:5173")
+           .AllowAnyMethod()
+           .WithHeaders("Authorization", "Content-Type");
+    });
+}); 
+
+           
+    
+
+// открытый API - для всех пользователей
+// разрешаем все заголовки 
+// все методы запроса
+
+
 
 var app = builder.Build();
 
@@ -63,7 +84,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
-app.UseCors();
+
+app.UseCors("AllowReact");
+
 
 app.UseAuthorization();
 app.MapStaticAssets();

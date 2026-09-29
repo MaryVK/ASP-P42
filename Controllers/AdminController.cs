@@ -77,7 +77,8 @@ namespace ASP_P42.Controllers
                     Description = formModel.Description,
                     Slug = formModel.Slug,
                     IsHidden = formModel.IsHidden,
-                    ImageUrl = "/storage/image/" + _storageService.Save(formModel.Image)
+                    ImageUrl = "/storage/image/" + _storageService.Save(formModel.Image),
+                    OrderInPrice = formModel.Order,
                 });
                 return Ok(newGroupId);
             }

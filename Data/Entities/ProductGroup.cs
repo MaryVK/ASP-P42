@@ -1,4 +1,6 @@
-﻿namespace ASP_P42.Data.Entities
+﻿using System.Text.Json.Serialization;
+
+namespace ASP_P42.Data.Entities
 {
     public class ProductGroup
     {
@@ -15,8 +17,11 @@
 
         public int OrderInPrice { get; set; } = 100000;
 
+
+
         public ICollection<Product> Products { get; set; } = [];
 
+        [JsonIgnore]
         public ProductGroup? ParentGroup { get; set; }
 
         public ICollection<ProductGroup> Children { get; set; } = [];
