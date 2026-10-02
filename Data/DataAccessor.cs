@@ -1,5 +1,13 @@
 ﻿using ASP_P42.Models.Admin;
 
+/*
+ 
+ DataAccessor — это уже не сама база, а вспомогательный класс, 
+                который выполняет определённые операции с данными.
+ */
+
+
+
 namespace ASP_P42.Data
 {
     public class DataAccessor(DataContext dataContext)

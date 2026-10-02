@@ -1,6 +1,20 @@
 ﻿using ASP_P42.Models.Home.Models;
 using Microsoft.EntityFrameworkCore;
 
+
+// связь с базой данных 
+/*
+ 
+ DataContext — это класс, через который Entity Framework понимает:
+
+ - какие таблицы есть в БД;
+ - какие сущности с ними связаны;
+ - как обращаться к этим таблицам.
+ 
+ */
+
+
+
 namespace ASP_P42.Data
 {
     public class DataContext : DbContext

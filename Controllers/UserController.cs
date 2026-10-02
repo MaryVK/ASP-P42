@@ -32,30 +32,43 @@ namespace ASP_P42.Controllers
             {
                 return BadRequest("Data structure non-bindable to model");
             }
+
+
             if (! formModel.IsAgree)
             {
                 return BadRequest("You should confirm site policy (agreement)");
             }
+
+
             String requiredMessage = " could not be empty";
             if (String.IsNullOrEmpty(formModel.Login))
             {
                 return BadRequest(nameof(formModel.Login) + requiredMessage);
             }
 
+
+
             if (String.IsNullOrEmpty(formModel.FullName))
             {
                 return BadRequest(nameof(formModel.FullName) + requiredMessage);
             }
+
+
 
             if (String.IsNullOrEmpty(formModel.Email))
             {
                 return BadRequest(nameof(formModel.Email) + requiredMessage);
             }
 
+
+
+
             if (String.IsNullOrEmpty(formModel.Phone))
             {
                 return BadRequest(nameof(formModel.Phone) + requiredMessage);
             }
+
+
 
             if(formModel.Password != formModel.Repeat)
             {
@@ -69,13 +82,12 @@ namespace ASP_P42.Controllers
                 return BadRequest(nameof(formModel.FullName) + " too short (2 symbols at least)");
             }
 
+
             formModel.Login = formModel.Login.Trim();
             if (formModel.Login.Length < 2)
             {
                 return BadRequest(nameof(formModel.Login) + " too short (2 symbols at least)");
             }
-
-  
             if (formModel.Login.Contains (':'))
             {
                 return BadRequest(nameof(formModel.Login) + " could not contain colon (':')");
@@ -91,11 +103,43 @@ namespace ASP_P42.Controllers
                 return BadRequest(nameof(formModel.Email) + " has invalid format");
             }
 
+
+            //  ДЗ: валидация телефона (он должен начинаться с 0)
+            formModel.Phone = formModel.Phone.Trim();
+            if(!Regex.IsMatch(
+                formModel.Phone,
+                @"^0\d{9}$"
+            ))
+            {
+                return BadRequest(nameof(formModel.Phone) + " has invalid format");
+            }
+
+
+
+            //  ДЗ: валидация пароля (миниммум 8 символов,
+            //                        маленькую и большую латинские буквы,
+            //                        цифру,
+            //                        спецсимвол)
+            formModel.Password = formModel.Password;
+            if(!Regex.IsMatch(
+                formModel.Password,
+                @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{8,}$"
+            ))
+            {
+                return BadRequest(nameof(formModel.Password) + " has invalid format");
+            }
+
+            
+
+
+
+
+
             // самая сложная проверка - с привлечением БД
 
             if(_dataContext.UserAccess.Any(ua => ua.Login == formModel.Login))
             {
-                BadRequest(nameof(formModel.Login));
+                return BadRequest(nameof(formModel.Login));
             }
 
             Guid userId = Guid.NewGuid();
